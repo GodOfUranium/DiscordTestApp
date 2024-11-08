@@ -22,10 +22,10 @@ async def hello_command(interaction):
     await interaction.response.send_message("Hello!")
 
 @tree.command(
-    name="fun",
-    description="fun command"
+    name="emoji",
+    description="emoji command"
 )
-async def fun_command(interaction, type:str):
+async def emoji_command(interaction, type:str):
     match type:
         case "tableflip":
             await interaction.response.send_message("(╯°□°)╯︵ ┻━┻")
@@ -33,6 +33,8 @@ async def fun_command(interaction, type:str):
             await interaction.response.send_message("┬─┬ノ( º _ ºノ)")
         case "smile":
             await interaction.response.send_message("(°u°)")
+        case "hug":
+            await interaction.response.send_message("(づ ◕‿◕ )づ")
         case _:
             await interaction.response.send_message("```An Error occured! Invalid input for type```")
 
