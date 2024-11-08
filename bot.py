@@ -11,7 +11,8 @@ token = os.getenv('DISCORD_TOKEN')
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
-
+########### Commands ###########
+# ---------- /hello ------------
 @tree.command(
     name = "hello",
     description="Say Hello!"
@@ -19,6 +20,7 @@ tree = app_commands.CommandTree(client)
 async def hello_command(ctx):
     await ctx.response.send_message("Hello!")
 
+# ---------- /emoji ------------
 @tree.command(
     name="emoji",
     description="emoji command"
@@ -36,6 +38,7 @@ async def emoji_command(ctx, type:str):
         case _:
             await ctx.response.send_message(f"An Error occurred! type \"{type}\" is invalid", ephemeral=True)
 
+# ------- /server_info ---------
 @tree.command(
     name="server_info",
     description="Get some info about the Server"
@@ -58,6 +61,7 @@ async def server_info_command(ctx):
                         inline=False)
     await ctx.response.send_message(embed=embed)
 
+# ---------- /help -------------
 @tree.command(
         name="help",
         description="List of all Commands"
@@ -76,6 +80,7 @@ async def help_command(ctx):
                             "/server_info")
     await ctx.response.send_message(embed=embed, ephemeral=True)
 
+########### on_ready ###########
 @client.event
 async def on_ready():
     print("Syncing Tree...")
