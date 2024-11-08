@@ -15,32 +15,39 @@ tree = app_commands.CommandTree(client)
     name = "hello",
     description="Say Hello!"
 )
-async def hello_command(interaction):
-    await interaction.response.send_message("Hello!")
+async def hello_command(ctx):
+    await ctx.response.send_message("Hello!")
 
 @tree.command(
     name="emoji",
     description="emoji command"
 )
-async def emoji_command(interaction, type:str):
+async def emoji_command(ctx, type:str):
     match type:
         case "tableflip":
-            await interaction.response.send_message("(╯°□°)╯︵ ┻━┻")
+            await ctx.response.send_message("(╯°□°)╯︵ ┻━┻")
         case "unflip":
-            await interaction.response.send_message("┬─┬ノ( º _ ºノ)")
+            await ctx.response.send_message("┬─┬ノ( º _ ºノ)")
         case "smile":
-            await interaction.response.send_message("(°‿°)")
+            await ctx.response.send_message("(°‿°)")
         case "hug":
-            await interaction.response.send_message("(づ ◕‿◕ )づ")
+            await ctx.response.send_message("(づ ◕‿◕ )づ")
         case _:
-            await interaction.response.send_message(f"An Error occured! type \"{type}\" is invalid", ephemeral=True)
+            await ctx.response.send_message(f"An Error occured! type \"{type}\" is invalid", ephemeral=True)
+
+@tree.command(
+    name="guild_id",
+    description="Get the Servers ID"
+)
+async def guild_id(ctx):
+    await ctx.response.send_message(ctx.guild.id)
 
 @tree.command(
         name="help",
         description="List of all Commands"
 )
-async def help(interaction):
-    await interaction.response.send_message(
+async def help_command(ctx):
+    await ctx.response.send_message(
         "```" + 
         "List of Commands: \n" + 
         "- /hello\n" + 
