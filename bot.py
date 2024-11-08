@@ -18,7 +18,11 @@ tree = app_commands.CommandTree(client)
     description="Say Hello!"
 )
 async def hello_command(ctx):
-    await ctx.response.send_message("Hello!")
+    embed = Embed(
+        title="Hello",
+        description=f"Hello {ctx.user.mention}"
+    )
+    await ctx.response.send_message(embed=embed)
 
 # ---------- /emoji ------------
 @tree.command(
@@ -26,17 +30,24 @@ async def hello_command(ctx):
     description="emoji command"
 )
 async def emoji_command(ctx, type:str):
-    match type:
+    error = False
+    match type.lower():
         case "tableflip":
-            await ctx.response.send_message("(╯°□°)╯︵ ┻━┻")
+            text = "(╯°□°)╯︵ ┻━┻"
         case "unflip":
-            await ctx.response.send_message("┬─┬ノ( º _ ºノ)")
+            text = "┬─┬ノ( º _ ºノ)"
         case "smile":
-            await ctx.response.send_message("(°‿°)")
+            text = "(°‿°)"
         case "hug":
-            await ctx.response.send_message("(づ ◕‿◕ )づ")
+            text = "(づ ◕‿◕ )づ"
         case _:
-            await ctx.response.send_message(f"An Error occurred! type \"{type}\" is invalid", ephemeral=True)
+            text = f"An Error occurred! type \"{type}\" is invalid"
+            error = True
+    embed = Embed(
+        title="Emoji" + (" " if error else (" " + type[0].upper() + type[1:].lower())),
+        description=text
+    )
+    await ctx.response.send_message(embed=embed, ephemeral=error)
 
 # ------- /server_info ---------
 @tree.command(
