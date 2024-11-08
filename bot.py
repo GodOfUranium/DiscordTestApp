@@ -33,7 +33,7 @@ async def emoji_command(interaction, type:str):
         case "hug":
             await interaction.response.send_message("(づ ◕‿◕ )づ")
         case _:
-            await interaction.response.send_message("```An Error occured! Invalid input for type```")
+            await interaction.response.send_message(f"An Error occured! type \"{type}\" is invalid", ephemeral=True)
 
 @tree.command(
         name="help",
@@ -41,13 +41,15 @@ async def emoji_command(interaction, type:str):
 )
 async def help(interaction):
     await interaction.response.send_message(
+        "```" + 
         "List of Commands: \n" + 
         "- /hello\n" + 
         "- /emoji (needs type:\n" + 
         "  - tableflip\n" + 
         "  - unflip\n" + 
         "  - smile\n" + 
-        "  - hug\n"
+        "  - hug\n" + 
+        "```", ephemeral=True
     )
 
 @client.event
