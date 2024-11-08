@@ -1,5 +1,5 @@
 import os
-import datetime
+import random
 import discord
 from discord import app_commands, Embed
 from dotenv import load_dotenv
@@ -49,6 +49,17 @@ async def emoji_command(ctx, type:str):
     )
     await ctx.response.send_message(embed=embed, ephemeral=error)
 
+@tree.command(
+    name="coinflip",
+    description="Flip a Coin"
+)
+async def coinflip_command(ctx):
+    embed = Embed(
+        title="Coin flip",
+        description=("Heads" if random.randint(0,1) else "Tails")
+    )
+    await ctx.response.send_message(embed=embed)
+
 # ------- /server_info ---------
 @tree.command(
     name="server_info",
@@ -61,7 +72,7 @@ async def server_info_command(ctx):
         title="Server Info", 
         description=f"Infos about the Server {guild.name}")
     embed.add_field(name="General", 
-                    value=  f"Server created on {(guild.created_at).strftime("%m/%d/%Y, %H:%M:%S")}\n" + 
+                    value=  f"Server created on {guild.created_at.strftime("%m/%d/%Y, %H:%M:%S")}\n" + 
                             f"Member count: {guild.member_count}", 
                     inline=False)
     if(guild.premium_subscription_count != 0):
