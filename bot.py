@@ -1,6 +1,7 @@
 import os
+import datetime
 import discord
-from discord import app_commands
+from discord import app_commands, Embed
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -36,11 +37,21 @@ async def emoji_command(ctx, type:str):
             await ctx.response.send_message(f"An Error occurred! type \"{type}\" is invalid", ephemeral=True)
 
 @tree.command(
-    name="guild_id",
-    description="Get the Servers ID"
+    name="server_info",
+    description="Get some info about the Server"
 )
-async def guild_id(ctx):
-    await ctx.response.send_message(ctx.guild.id)
+async def server_info_command(ctx):
+    ID = ctx.guild.id
+    guild = client.get_guild(ID)
+
+    embed = Embed(
+        title="Server Info", 
+        description=f"Infos about the Server {guild.name}")
+    embed.add_field(name="General", 
+                    value=  f"Server created on \t {(guild.created_at).strftime("%m/%d/%Y, %H:%M:%S")}\n"
+                            f"Member count:\t {guild.member_count}" , 
+                    inline=False)
+    await ctx.response.send_message(embed=embed)
 
 @tree.command(
         name="help",
