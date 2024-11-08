@@ -54,6 +54,7 @@ async def help(interaction):
 
 @client.event
 async def on_ready():
+    print("Syncing Tree...")
     await tree.sync()
     print("Ready!")
 
