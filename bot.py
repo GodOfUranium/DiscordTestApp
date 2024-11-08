@@ -18,6 +18,14 @@ tree = app_commands.CommandTree(client)
 async def hello_command(interaction):
     await interaction.response.send_message("Hello!")
 
+@tree.command(
+    name="fun",
+    description="fun command"
+)
+async def fun_command(interaction, type:str):
+    if(type == "tableflip"):
+        await interaction.response.send_message("(╯°□°)╯︵ ┻━┻")
+
 @client.event
 async def on_ready():
     await tree.sync()
