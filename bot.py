@@ -32,7 +32,7 @@ async def emoji_command(interaction, type:str):
         case "unflip":
             await interaction.response.send_message("┬─┬ノ( º _ ºノ)")
         case "smile":
-            await interaction.response.send_message("(°u°)")
+            await interaction.response.send_message("(°‿°)")
         case "hug":
             await interaction.response.send_message("(づ ◕‿◕ )づ")
         case _:
