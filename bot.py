@@ -11,9 +11,6 @@ intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
-def sendmsg(interaction, text:str):
-    interaction.response.send_message(text)
-
 @tree.command(
     name = "hello",
     description="Say Hello!"
