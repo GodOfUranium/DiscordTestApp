@@ -33,7 +33,7 @@ async def emoji_command(ctx, type:str):
         case "hug":
             await ctx.response.send_message("(づ ◕‿◕ )づ")
         case _:
-            await ctx.response.send_message(f"An Error occured! type \"{type}\" is invalid", ephemeral=True)
+            await ctx.response.send_message(f"An Error occurred! type \"{type}\" is invalid", ephemeral=True)
 
 @tree.command(
     name="guild_id",
