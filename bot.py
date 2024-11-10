@@ -40,12 +40,15 @@ async def emoji_command(ctx, type:str, private:str = None):
             text = "(°‿°)"
         case "hug":
             text = "(づ ◕‿◕ )づ"
+        case "shrug":
+            text = "¯\\_(ツ)_/¯" # \\ because of escape sequence
         case _:
             text = f"An Error occurred! type \"{type}\" is invalid"
             error = True
     embed = Embed(
         title="Emoji" + (" " if error else (" " + type[0].upper() + type[1:].lower())),
-        description=text
+        description=text,
+        color=(0xff0000 if error else None)
     )
     await ctx.response.send_message(embed=embed, ephemeral=(error if private==None else True))
 
@@ -125,6 +128,7 @@ async def help_command(ctx):
                             "  - unflip\n"
                             "  - smile\n"
                             "  - hug\n"
+                            "  - shrug\n"
                             "- __Optional__ *private*:\n"
                             "  - input anything to make the message private\n"
                             "/server_info\n"
