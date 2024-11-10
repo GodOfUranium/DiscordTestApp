@@ -29,7 +29,7 @@ async def hello_command(ctx):
     name="emoji",
     description="emoji command"
 )
-async def emoji_command(ctx, type:str):
+async def emoji_command(ctx, type:str, private:str = None):
     error = False
     match type.lower():
         case "tableflip":
@@ -47,7 +47,7 @@ async def emoji_command(ctx, type:str):
         title="Emoji" + (" " if error else (" " + type[0].upper() + type[1:].lower())),
         description=text
     )
-    await ctx.response.send_message(embed=embed, ephemeral=error)
+    await ctx.response.send_message(embed=embed, ephemeral=(error if private==None else True))
 
 @tree.command(
     name="coinflip",
@@ -73,7 +73,7 @@ async def server_info_command(ctx):
         description=f"Infos about the Server {guild.name}")
     embed.add_field(name="General", 
                     value=  f"Server created on {guild.created_at.strftime("%m/%d/%Y, %H:%M:%S")}\n" + 
-                            f"Member count: {guild.member_count}", 
+                            f"Member count: {guild.member_count}",
                     inline=False)
     if(guild.premium_subscription_count != 0):
         embed.add_field(name="Boosts",
@@ -81,6 +81,31 @@ async def server_info_command(ctx):
                                 f"Server Boost Count {guild.premium_subscription_count}\n" + 
                                 f"Server Boosters: {", ".join([f"\n- {e}" for e in guild.premium_subscribers])}",
                         inline=False)
+    await ctx.response.send_message(embed=embed)
+
+# --------- /user_info ----------
+@tree.command(
+    name="user_info",
+    description="Get some info about a user on this server"
+)
+async def server_info_command(ctx, user:discord.Member):
+    guild = ctx.guild
+
+    embed = Embed(
+        title="User Info",
+        description=f"Information about {user.mention}")
+    embed.add_field(
+        name="General",
+        value=  f"Name: {user.name}\n" + 
+                f"Global name: {user.global_name}\n" + 
+                f"Server name: {user.display_name}\n",
+        inline=False)
+    embed.add_field(
+        name="Roles",
+        value=(", ".join([f"\n- {e.name if "@" not in e.name else e.name.replace("@", "")}" for e in user.roles])),
+        inline=False
+    )
+
     await ctx.response.send_message(embed=embed)
 
 # ---------- /help -------------
@@ -93,13 +118,17 @@ async def help_command(ctx):
         title="Help",
         description="")
     embed.add_field(name="Command list",
-                    value=  "/hello\n" + 
-                            "/emoji type:\n" + 
-                            "- tableflip\n" + 
-                            "- unflip\n" + 
-                            "- smile\n" + 
-                            "- hug\n" + 
-                            "/server_info")
+                    value=  "/hello\n"
+                            "/emoji\n"
+                            "- *type*:\n"
+                            "  - tableflip\n"
+                            "  - unflip\n"
+                            "  - smile\n"
+                            "  - hug\n"
+                            "- __Optional__ *private*:\n"
+                            "  - input anything to make the message private\n"
+                            "/server_info\n"
+                            "/user_info")
     await ctx.response.send_message(embed=embed, ephemeral=True)
 
 ########### on_ready ###########
