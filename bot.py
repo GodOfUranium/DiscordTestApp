@@ -46,12 +46,13 @@ async def emoji_command(ctx, type:str, private:str = None):
             text = f"An Error occurred! type \"{type}\" is invalid"
             error = True
     embed = Embed(
-        title="Emoji" + (" " if error else (" " + type[0].upper() + type[1:].lower())),
+        title="Emoji " + ("" if error else (type[0].upper() + type[1:].lower())),
         description=text,
         color=(0xff0000 if error else None)
     )
     await ctx.response.send_message(embed=embed, ephemeral=(error if private==None else True))
 
+# --------- /coinflip ----------
 @tree.command(
     name="coinflip",
     description="Flip a Coin"
@@ -105,11 +106,42 @@ async def server_info_command(ctx, user:discord.Member):
         inline=False)
     embed.add_field(
         name="Roles",
-        value=(", ".join([f"\n- {e.name if "@" not in e.name else e.name.replace("@", "")}" for e in user.roles])),
+        value=(", ".join([f"\n- {e.name}" for e in user.roles])),
         inline=False
     )
 
     await ctx.response.send_message(embed=embed)
+
+# --------- /del_last ----------
+@tree.command(
+    name="del_last",
+    description="Deletes the last amount of messages specified in the amount parameter (0 ≤ amount ≤ 100)"
+)
+async def del_last_command(ctx, amount:int, user:discord.Member=None):
+    if(ctx.user.guild_permissions.administrator):
+        if(user==None):
+            if(amount <= 0):
+                amount = 0
+            elif(amount >= 100):
+                amount = 100
+            
+            channel = ctx.channel
+            messages = await channel.history(limit=100).flatten()
+
+            for msg in messages:
+                await msg.delete()
+
+            embed = Embed(
+                title="/del_last",
+                description=f"successfully deleted the last {amount} messages"
+            )
+    else:
+        embed = Embed(
+            title="/Del_last",
+            description="You do not have permission to use /del_last",
+            color=0xff0000
+        )
+    await ctx.response.send_message(embed=embed, ephemeral=True)
 
 # ---------- /help -------------
 @tree.command(
