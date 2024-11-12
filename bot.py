@@ -115,33 +115,42 @@ async def server_info_command(ctx, user:discord.Member):
 # --------- /del_last ----------
 @tree.command(
     name="del_last",
-    description="Deletes the last amount of messages specified in the amount parameter (0 ≤ amount ≤ 100)"
+    description="Deletes the last range of messages specified in the range parameter (0 ≤ range ≤ 100)"
 )
-async def del_last_command(ctx, amount:int, user:discord.Member=None):
+async def del_last_command(ctx, range:int, user:discord.Member=None):
     if(ctx.user.guild_permissions.administrator):
-        if(user==None):
-            if(amount <= 0):
-                amount = 0
-            elif(amount >= 100):
-                amount = 100
-            
-            channel = ctx.channel
-            messages = await channel.history(limit=100).flatten()
 
-            for msg in messages:
-                await msg.delete()
+        await ctx.response.defer(ephemeral=True)
+
+        oobt = "" # oobt => out of bounds text
+        if(range <= 0):
+            oobt=f"\nYou can't delete {range} messages. min 0"
+            range = 0
+        elif(range >= 100):
+            oobt=f"\nYou may not delete {range} messages. max 100"
+            range = 100
+        
+        if(user==None):
+            await ctx.channel.purge(limit=range)
 
             embed = Embed(
                 title="/del_last",
-                description=f"successfully deleted the last {amount} messages"
+                description=f"successfully deleted the last {range} messages{oobt}"
+            )
+        else:
+            await ctx.channel.purge(limit=range, check=lambda m:m.author==user)
+
+            embed = Embed(
+                title="/del_last",
+                description=f"successfully deleted the last messages by {user} in range of {range}{oobt}"
             )
     else:
         embed = Embed(
-            title="/Del_last",
+            title="/del_last",
             description="You do not have permission to use /del_last",
             color=0xff0000
         )
-    await ctx.response.send_message(embed=embed, ephemeral=True)
+    await ctx.followup.send(embed=embed, ephemeral=True)
 
 # ---------- /help -------------
 @tree.command(
@@ -153,18 +162,23 @@ async def help_command(ctx):
         title="Help",
         description="")
     embed.add_field(name="Command list",
-                    value=  "/hello\n"
-                            "/emoji\n"
-                            "- *type*:\n"
-                            "  - tableflip\n"
-                            "  - unflip\n"
-                            "  - smile\n"
-                            "  - hug\n"
-                            "  - shrug\n"
-                            "- __Optional__ *private*:\n"
-                            "  - input anything to make the message private\n"
-                            "/server_info\n"
-                            "/user_info")
+                    value=  "- `/hello`\n"
+                            "- `/emoji`\n"
+                            "  - `type`:\n"
+                            "    - tableflip\n"
+                            "    - unflip\n"
+                            "    - smile\n"
+                            "    - hug\n"
+                            "    - shrug\n"
+                            "  - __Optional__ `private`:\n"
+                            "    - input anything to make the message private\n"
+                            "- `/del_last`\n"
+                            "  - `range`:\n"
+                            "    - the range in which `/del_last` deletes (0 ≤ `range` ≤ 100)\n"
+                            "  - __Optional__ `user`:\n"
+                            "    - will search the last `range` messages for messages of `user` and delete them\n"
+                            "- `/server_info`\n"
+                            "- `/user_info`")
     await ctx.response.send_message(embed=embed, ephemeral=True)
 
 ########### on_ready ###########
