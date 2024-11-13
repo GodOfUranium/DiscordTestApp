@@ -1,5 +1,6 @@
 import os
 import random
+import requests
 import discord
 from discord import app_commands, Embed
 from dotenv import load_dotenv
@@ -11,6 +12,7 @@ token = os.getenv('DISCORD_TOKEN')
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
+
 ########### Commands ###########
 # ---------- /hello ------------
 @tree.command(
@@ -152,6 +154,19 @@ async def del_last_command(ctx, range:int, user:discord.Member=None):
         )
     await ctx.followup.send(embed=embed, ephemeral=True)
 
+# --------- /dadjoke -----------
+@tree.command(
+    name="dadjoke",
+    description="get a dadjoke"
+)
+async def dadjoke_command(ctx):
+    response = requests.get("https://icanhazdadjoke.com/", headers={"Accept":"application/json"}).json()
+    embed = Embed(
+        title="Dadjoke",
+        description=response["joke"]
+    )
+    await ctx.response.send_message(embed=embed)
+
 # ---------- /help -------------
 @tree.command(
         name="help",
@@ -177,6 +192,8 @@ async def help_command(ctx):
                             "    - the range in which `/del_last` deletes (0 ≤ `range` ≤ 100)\n"
                             "  - __Optional__ `user`:\n"
                             "    - will search the last `range` messages for messages of `user` and delete them\n"
+                            "- `/coinflip`\n"
+                            "- `/dadjoke`\n"
                             "- `/server_info`\n"
                             "- `/user_info`")
     await ctx.response.send_message(embed=embed, ephemeral=True)
