@@ -5,10 +5,10 @@ import discord
 from discord import app_commands, Embed
 from dotenv import load_dotenv
 
+# .env
 load_dotenv()
-
 token = os.getenv('DISCORD_TOKEN')
-
+# discord
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
@@ -94,9 +94,7 @@ async def server_info_command(ctx):
     name="user_info",
     description="Get some info about a user on this server"
 )
-async def server_info_command(ctx, user:discord.Member):
-    guild = ctx.guild
-
+async def user_info_command(ctx, user:discord.Member):
     embed = Embed(
         title="User Info",
         description=f"Information about {user.mention}")
@@ -169,8 +167,8 @@ async def dadjoke_command(ctx):
 
 # ---------- /help -------------
 @tree.command(
-        name="help",
-        description="List of all Commands"
+    name="help",
+    description="List of all Commands"
 )
 async def help_command(ctx):
     embed = Embed(
